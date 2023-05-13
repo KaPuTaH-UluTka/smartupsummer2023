@@ -1,0 +1,32 @@
+
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "extends:next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "eslint-plugin-prettier"
+  ],
+  "rules": {
+    "comma-dangle": ["error", "only-multiline"],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/ban-ts-ignore": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-var-reqiures": "off"
+  }
+}
