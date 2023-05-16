@@ -1,0 +1,18 @@
+export enum GRAY_COLORS {
+  WHITE = '#FFFFFF',
+  GREY100 = '#F5F5F6',
+  GREY200 = '#EAEBED',
+  GREY300 = '#D5D6DC',
+  GREY500 = '#ACADB9',
+  GREY600 = '#7B7C88',
+  BLACK = '#232134',
+}
+
+export enum BLUE_COLORS {
+  BLUE100 = '#DEECFF',
+  BLUE200 = '#C9E0FF',
+  BLUE300 = '#B7D6FF',
+  BLUE400 = '#92C1FF',
+  BLUE500 = '#5E96FC',
+  BLUE600 = '#3B7CD3',
+}
