@@ -16,9 +16,33 @@ export interface AuthorizationResponse {
 }
 
 export interface VacanciesRequest {
-  page: number;
+  page?: number;
   keyword?: string;
-  paymentFrom?: string;
-  paymentTo?: string;
+  paymentFrom?: number;
+  paymentTo?: number;
   catalogue?: number;
+}
+
+export interface CataloguesResponse {
+  key: number;
+  positions: [];
+  title: string;
+  title_rus: string;
+  title_trimmed: string;
+  url_rus: string;
+}
+
+export interface VacanciesResponse {
+  id: number;
+  profession: string;
+  firm_name: string;
+  town: {
+    title: string;
+  };
+  type_of_work: {
+    title: string;
+  };
+  payment_from: number;
+  payment_to: number;
+  currency: string;
 }

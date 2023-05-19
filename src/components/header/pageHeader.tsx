@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Header, Container, Group, Burger, Paper, Transition } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { MantineLogo } from '@mantine/ds';
 import Link from 'next/link';
+import Logo from '../../assets/logo.svg';
+import Image from 'next/image';
 import { HEADER_HEIGHT, headerStyles } from '@/components/header/styles';
 
 interface HeaderResponsiveProps {
@@ -31,7 +32,7 @@ export function PageHeader({ links }: HeaderResponsiveProps) {
   return (
     <Header height={HEADER_HEIGHT} mb={120} className={classes.root}>
       <Container className={classes.header} size={'lg'}>
-        <MantineLogo size={28} />
+        <Image src={Logo} alt="logo" width={141} height={36} />
         <Group spacing={5} className={classes.links}>
           {items}
         </Group>

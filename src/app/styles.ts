@@ -4,6 +4,7 @@ export const useMainStyles = createStyles((theme) => ({
   mainBg: {
     minWidth: '100vw',
     minHeight: 'calc(100vh - 86px)',
+    padding: 0,
     paddingTop: '40px',
     background: theme.colors.gray[1],
   },
@@ -17,7 +18,12 @@ export const useMainStyles = createStyles((theme) => ({
   },
 
   vacanciesList: {
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    padding: 0,
+    rowGap: px(16),
+    marginTop: px(16),
+    alignItems: 'center',
   },
 }));

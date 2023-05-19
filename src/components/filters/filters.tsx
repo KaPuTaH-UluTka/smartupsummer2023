@@ -1,45 +1,107 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
-import { UnstyledButton, Menu, Group, Container, Title, Button } from '@mantine/core';
+import { UnstyledButton, Menu, Group, Container, Title, Button, ScrollArea } from '@mantine/core';
 import { IconChevronDown, IconPlus } from '@tabler/icons-react';
 import { useFiltersStyles } from '@/components/filters/styles';
 import { SalaryInputs } from '@/components/filters/salaryInputs/salaryInputs';
-
-const data = [
-  { label: 'English' },
-  { label: 'German' },
-  { label: 'Italian' },
-  { label: 'French' },
-  { label: 'Polish' },
-];
+import { useAppDispatch, useAppSelector } from '@/utils/hooks';
+import { superJobApi } from '@/store/api/api';
+import { setCatalogues } from '@/store/reducers/cataloguesReducer';
+import { setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
+import { CataloguesResponse } from '@/utils/types';
+import {
+  resetFilters,
+  setCurrentCatalog,
+  setPaymentFrom,
+  setPaymentTo,
+} from '@/store/reducers/filtersReducer';
+import { TestAttributes } from '@/utils/testAttributes';
+import { setLoadingFalse, setLoadingTrue } from '@/store/reducers/loadingReducer';
 
 export function Filters() {
+  const dispatch = useAppDispatch();
+
+  const { catalogues } = useAppSelector((state) => state.cataloguesReducer);
+  const { currentCatalog, paymentFrom, paymentTo, keyword } = useAppSelector(
+    (state) => state.filtersReducer
+  );
+  const { globalLoading } = useAppSelector((state) => state.loadingReducer);
+  const [cataloguesTrigger, { data: cataloguesResponse }] = superJobApi.useLazyGetCataloguesQuery();
+
+  const [vacanciesTrigger, { data: vacanciesResponse, isLoading, isSuccess, isFetching }] =
+    superJobApi.useLazyGetVacanciesQuery();
+
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(setLoadingTrue());
+    }
+
+    if (!catalogues) {
+      cataloguesTrigger();
+      dispatch(setCatalogues(cataloguesResponse));
+    }
+
+    if (!isFetching && isSuccess) {
+      dispatch(setVacancies(vacanciesResponse?.objects));
+      dispatch(setPages(vacanciesResponse?.total));
+      dispatch(setLoadingFalse());
+    }
+  }, [
+    catalogues,
+    cataloguesResponse,
+    cataloguesTrigger,
+    dispatch,
+    isFetching,
+    isSuccess,
+    vacanciesResponse?.objects,
+    vacanciesResponse?.total,
+  ]);
+
   const form = useForm({
     initialValues: {
-      industry: '',
-      minSalary: '',
-      maxSalary: '',
+      catalogue: '',
+      paymentFrom: '',
+      paymentTo: '',
     },
   });
+
   const [opened, setOpened] = useState(false);
   const { classes } = useFiltersStyles({ opened });
 
-  const items = data.map((item) => (
-    <Menu.Item onClick={() => form.setFieldValue('industry', item.label)} key={item.label}>
-      {item.label}
-    </Menu.Item>
-  ));
+  const currentCatalogSetter = (catalogue: CataloguesResponse) => {
+    form.setFieldValue('catalogue', catalogue.title_rus);
+    dispatch(setCurrentCatalog(catalogue));
+  };
 
-  const submitHandler = (data: { industry: string; minSalary: string; maxSalary: string }) => {
-    console.log(data);
+  const submitHandler = () => {
+    vacanciesTrigger({
+      catalogue: currentCatalog?.key,
+      paymentFrom: paymentFrom,
+      paymentTo: paymentTo,
+      keyword: keyword,
+    });
+  };
+
+  const changeHandler = () => {
+    dispatch(setPaymentFrom(+form.values.paymentFrom));
+    dispatch(setPaymentTo(+form.values.paymentTo));
+  };
+
+  const clearFilters = () => {
+    form.reset();
+    dispatch(resetFilters());
   };
 
   return (
     <Container className={classes.filtersWrapper}>
-      <form className={classes.filtersForm} onSubmit={form.onSubmit(submitHandler)}>
+      <form
+        className={classes.filtersForm}
+        onSubmit={form.onSubmit(submitHandler)}
+        onChange={changeHandler}
+      >
         <Container className={classes.resetFiltersWrapper}>
           <Title className={classes.filtersTitle}>Фильтры</Title>
-          <Button className={classes.resetFiltersBtn} onClick={form.reset}>
+          <Button className={classes.resetFiltersBtn} onClick={clearFilters}>
             Сбросить все
             <IconPlus size="1rem" style={{ transform: 'rotate(45deg)', marginLeft: '10px' }} />
           </Button>
@@ -48,6 +110,7 @@ export function Filters() {
         <Menu
           onOpen={() => setOpened(true)}
           onClose={() => setOpened(false)}
+          data-elem={TestAttributes.industrySelect}
           radius="md"
           width="target"
           withinPortal
@@ -55,8 +118,8 @@ export function Filters() {
           <Menu.Target>
             <UnstyledButton className={classes.industry}>
               <Group spacing="xs">
-                {form.values.industry ? (
-                  <span className={classes.industryLabel}>{form.values.industry}</span>
+                {form.values.catalogue ? (
+                  <span className={classes.industryLabel}>{form.values.catalogue}</span>
                 ) : (
                   <span className={classes.industryLabelEmpty}>Выберите отрасль</span>
                 )}
@@ -64,11 +127,25 @@ export function Filters() {
               <IconChevronDown size="1.5rem" className={classes.industryIcon} />
             </UnstyledButton>
           </Menu.Target>
-          <Menu.Dropdown>{items}</Menu.Dropdown>
+          <Menu.Dropdown>
+            <ScrollArea h={250}>
+              {catalogues &&
+                catalogues.map((item) => (
+                  <Menu.Item onClick={() => currentCatalogSetter(item)} key={item.key}>
+                    {item.title_rus}
+                  </Menu.Item>
+                ))}
+            </ScrollArea>
+          </Menu.Dropdown>
         </Menu>
         <Title className={classes.filtersSubTitle}>Оклад</Title>
         <SalaryInputs form={form} />
-        <Button type={'submit'} className={classes.submitBtn}>
+        <Button
+          data-elem={TestAttributes.searchButton}
+          disabled={globalLoading}
+          type={'submit'}
+          className={classes.submitBtn}
+        >
           Применить
         </Button>
       </form>

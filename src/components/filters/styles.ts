@@ -6,7 +6,7 @@ export const useFiltersStyles = createStyles((theme, { opened }: { opened: boole
     height: px(360),
     padding: px(20),
     backgroundColor: theme.colors.gray[0],
-    border: `${px(1)} solid ${theme.colors.gray[2]}`,
+    border: `${rem(1)} solid ${theme.colors.gray[2]}`,
     borderRadius: px(12),
   },
 

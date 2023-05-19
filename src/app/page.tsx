@@ -1,34 +1,59 @@
 'use client';
-import { authorization, getVacancies } from '@/api/api';
+import { superJobApi } from '@/store/api/api';
 import { Container } from '@mantine/core';
 import { Search } from '@/components/search/search';
 import { Filters } from '@/components/filters/filters';
 import { useMainStyles } from '@/app/styles';
 import { AuthorizeData } from '@/utils/constants';
-import { AuthorizationResponse } from '@/utils/types';
+import { VacancyCard } from '@/components/vacancyCard/vacancyCard';
+import { PaginationWrapper } from '@/components/pagination/Pagination';
+import { useAppDispatch, useAppSelector } from '@/utils/hooks';
+import { setRefreshToken, setToken } from '@/store/reducers/tokenReducer';
+import { useEffect } from 'react';
+import { setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
+import { LoaderWrapper } from '@/components/loader/loader';
 
 export default function Page() {
   const { classes } = useMainStyles();
 
-  const token = localStorage.getItem('token');
+  const { token } = useAppSelector((state) => state.tokenReducer);
 
-  if (!token) {
-    const res = authorization(AuthorizeData);
-    res.then((data: AuthorizationResponse) => {
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('refresh', data.refresh_token);
-    });
-  }
+  const { vacancies } = useAppSelector((state) => state.vacanciesReducer);
 
-  // const vacancies = getVacancies();
+  const { globalLoading } = useAppSelector((state) => state.loadingReducer);
+
+  const dispatch = useAppDispatch();
+
+  const [authTrigger, { data: authResponse, isError: isAuthError }] =
+    superJobApi.useLazyAuthorizationQuery();
+
+  const [vacanciesTrigger, { data: vacanciesResponse, isError: isVacanciesError }] =
+    superJobApi.useLazyGetVacanciesQuery();
+
+  useEffect(() => {
+    if (!token && !isAuthError) {
+      authTrigger(AuthorizeData);
+      dispatch(setToken(authResponse?.access_token));
+      dispatch(setRefreshToken(authResponse?.refresh_token));
+    }
+    if (!vacancies && !isVacanciesError) {
+      vacanciesTrigger();
+      dispatch(setVacancies(vacanciesResponse?.objects));
+      dispatch(setPages(vacanciesResponse?.total ? Math.ceil(vacanciesResponse?.total / 4) : 1));
+    }
+  });
 
   return (
     <>
       <Filters />
       <Container className={classes.vacanciesSearch}>
         <Search />
-        <Container className={classes.vacanciesList} />
+        <Container className={classes.vacanciesList}>
+          {vacancies && vacancies.map((el) => <VacancyCard key={el.id} vacancy={el} />)}
+          <PaginationWrapper />
+        </Container>
       </Container>
+      <LoaderWrapper opened={globalLoading} />
     </>
   );
 }
