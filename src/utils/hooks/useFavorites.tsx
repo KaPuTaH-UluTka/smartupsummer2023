@@ -1,7 +1,8 @@
 import { superJobApi } from '@/store/api/api';
 import { useLoading } from '@/utils/hooks/useLoading';
-import { setFavoriteVacancies } from '@/store/reducers/vacanciesReducer';
+import { setFavoriteVacancies, setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
 import { useAppDispatch } from '@/utils/hooks/redux';
+import { useEffect } from 'react';
 
 export const useFavorites = () => {
   const dispatch = useAppDispatch();
@@ -24,8 +25,13 @@ export const useFavorites = () => {
 
   const changeFavoritesPageHandler = (page: number) => {
     trigger(splitFavorites(parsedFavorites, page));
-    dispatch(setFavoriteVacancies(data?.objects));
   };
+
+  useEffect(() => {
+    if (!isFetching && isSuccess) {
+      dispatch(setFavoriteVacancies(data?.objects));
+    }
+  }, [data?.objects, dispatch, isFetching, isSuccess]);
 
   return { changeFavoritesPageHandler, favoritePages, parsedFavorites };
 };
