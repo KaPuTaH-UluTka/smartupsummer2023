@@ -18,9 +18,10 @@ type VacancyCardProps = {
     payment_to: number;
     currency: string;
   };
+  isVacancyPage?: boolean;
 };
 
-export const VacancyCard = ({ vacancy }: VacancyCardProps) => {
+export const VacancyCard = ({ vacancy, isVacancyPage }: VacancyCardProps) => {
   const { classes } = useVacancyCardStyles();
 
   const router = useRouter();
@@ -37,13 +38,13 @@ export const VacancyCard = ({ vacancy }: VacancyCardProps) => {
 
   const openVacancy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    router.push(`/${id}`);
+    router.push(`/vacancies/${id}`);
   };
 
   return (
     <Container
       className={classes.cardWrapper}
-      onClick={(e) => openVacancy(e)}
+      onClick={(e) => !isVacancyPage && openVacancy(e)}
       data-elem={TestAttributes.vacancy + id}
     >
       <Container className={classes.cardTitleWrapper}>

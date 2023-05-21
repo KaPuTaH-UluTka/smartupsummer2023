@@ -16,7 +16,6 @@ import {
   setPaymentTo,
 } from '@/store/reducers/filtersReducer';
 import { TestAttributes } from '@/utils/testAttributes';
-import { setLoadingFalse, setLoadingTrue } from '@/store/reducers/loadingReducer';
 import { useVacancies } from '@/utils/hooks/useVacancies';
 
 export function Filters() {
@@ -27,7 +26,7 @@ export function Filters() {
 
   const [cataloguesTrigger, { data: cataloguesResponse }] = superJobApi.useLazyGetCataloguesQuery();
 
-  const { globalLoading, submitHandler } = useVacancies();
+  const { submitHandler } = useVacancies();
 
   useEffect(() => {
     if (!catalogues) {
@@ -107,14 +106,6 @@ export function Filters() {
         </Menu>
         <Title className={classes.filtersSubTitle}>Оклад</Title>
         <SalaryInputs form={form} />
-        <Button
-          data-elem={TestAttributes.searchButton}
-          disabled={globalLoading}
-          type={'submit'}
-          className={classes.submitBtn}
-        >
-          Применить
-        </Button>
       </form>
     </Container>
   );

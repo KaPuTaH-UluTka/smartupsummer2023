@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import { setLoadingFalse, setLoadingTrue } from '@/store/reducers/loadingReducer';
 import { setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
 import { superJobApi } from '@/store/api/api';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/redux';
+import { useLoading } from '@/utils/hooks/useLoading';
 
 export const useVacancies = () => {
   const dispatch = useAppDispatch();
-  const [vacanciesTrigger, { data: VacancyResponse, isFetching, isSuccess, isLoading }] =
+  const [vacanciesTrigger, { data: VacancyResponse, isFetching, isSuccess, isLoading, isError }] =
     superJobApi.useLazyGetVacanciesQuery();
 
-  const { globalLoading } = useAppSelector((state) => state.loadingReducer);
+  const { isGlobalLoading } = useAppSelector((state) => state.loadingReducer);
 
   const { currentCatalog, paymentFrom, paymentTo, keyword } = useAppSelector(
     (state) => state.filtersReducer
@@ -34,14 +34,12 @@ export const useVacancies = () => {
     });
   };
 
+  useLoading(isLoading, isSuccess, isError, isFetching);
+
   useEffect(() => {
-    if (isLoading) {
-      dispatch(setLoadingTrue());
-    }
     if (!isFetching && isSuccess) {
       dispatch(setVacancies(VacancyResponse?.objects));
       dispatch(setPages(VacancyResponse?.total ? Math.ceil(VacancyResponse?.total / 4) : 1));
-      dispatch(setLoadingFalse());
     }
   }, [
     dispatch,
@@ -52,5 +50,5 @@ export const useVacancies = () => {
     VacancyResponse?.total,
   ]);
 
-  return { globalLoading, changePageHandler, submitHandler };
+  return { isGlobalLoading, changePageHandler, submitHandler };
 };

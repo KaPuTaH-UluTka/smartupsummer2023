@@ -7,6 +7,7 @@ import { useMainStyles } from '@/app/styles';
 import { BLUE_COLORS, GRAY_COLORS } from '@/utils/colors';
 import { store } from '@/store/store';
 import { Provider } from 'react-redux';
+import { MainLayout } from '@/components/mainLayout/mainLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -58,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <PageHeader links={HEADER_LINKS} />
             <Container className={classes.mainBg}>
               <Container className={classes.main} size={'lg'}>
-                {children}
+                <MainLayout>{children}</MainLayout>
               </Container>
             </Container>
           </MantineProvider>

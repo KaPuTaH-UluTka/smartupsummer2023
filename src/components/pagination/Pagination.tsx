@@ -2,18 +2,27 @@ import React from 'react';
 import { Pagination } from '@mantine/core';
 import { useAppSelector } from '@/utils/hooks/redux';
 import { useVacancies } from '@/utils/hooks/useVacancies';
+import { useFavorites } from '@/utils/hooks/useFavorites';
 
-export const PaginationWrapper = () => {
+export const PaginationWrapper = ({
+  isFavorites,
+  favoritesPages,
+}: {
+  isFavorites?: boolean;
+  favoritesPages?: number;
+}) => {
   const { totalPages } = useAppSelector((state) => state.vacanciesReducer);
 
-  const { globalLoading, changePageHandler } = useVacancies();
+  const { isGlobalLoading, changePageHandler } = useVacancies();
+
+  const { changeFavoritesPageHandler } = useFavorites();
 
   return (
     <Pagination
-      total={totalPages || 1}
+      total={favoritesPages ? favoritesPages : totalPages || 1}
       mt={40}
-      disabled={globalLoading}
-      onChange={changePageHandler}
+      disabled={isGlobalLoading}
+      onChange={isFavorites ? changeFavoritesPageHandler : changePageHandler}
       styles={(theme) => ({
         control: {
           '&[data-active]': {

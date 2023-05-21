@@ -67,5 +67,18 @@ export const superJobApi = createApi({
         },
       }),
     }),
+    getFavoriteVacancies: builder.query<{ objects: VacancyResponse[]; total: number }, number[]>({
+      query: (data) => ({
+        url:
+          API_ENDPOINTS.VACANCIES +
+          '?published=1' +
+          data.map((el, i) => `&ids[${i}]=${el}`).join(''),
+        headers: {
+          'x-secret-key': API_SECRET,
+          'X-Api-App-Id': AuthorizeData.client_secret,
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });

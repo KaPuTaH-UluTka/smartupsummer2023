@@ -19,7 +19,7 @@ export function Search() {
     },
   });
 
-  const { globalLoading, submitHandler } = useVacancies();
+  const { isGlobalLoading, submitHandler } = useVacancies();
 
   return (
     <form
@@ -28,7 +28,7 @@ export function Search() {
     >
       <TextInput
         data-elem={TestAttributes.searchInput}
-        disabled={globalLoading}
+        disabled={isGlobalLoading}
         sx={{
           input: {
             fontSize: '14px',
@@ -45,7 +45,7 @@ export function Search() {
           <Button
             data-elem={TestAttributes.searchButton}
             className={classes.searchBtn}
-            disabled={globalLoading}
+            disabled={isGlobalLoading}
             variant="filled"
             type={'submit'}
           >

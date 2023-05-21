@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface LoadingState {
-  globalLoading: boolean;
+  isGlobalLoading: boolean;
 }
 
 const initialState: LoadingState = {
-  globalLoading: false,
+  isGlobalLoading: false,
 };
 
 export const LoadingReducer = createSlice({
@@ -13,10 +13,10 @@ export const LoadingReducer = createSlice({
   initialState,
   reducers: {
     setLoadingFalse: (state) => {
-      state.globalLoading = false;
+      state.isGlobalLoading = false;
     },
     setLoadingTrue: (state) => {
-      state.globalLoading = true;
+      state.isGlobalLoading = true;
     },
   },
 });

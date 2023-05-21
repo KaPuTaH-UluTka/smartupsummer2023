@@ -3,7 +3,6 @@ import { superJobApi } from '@/store/api/api';
 import { Container } from '@mantine/core';
 import { Search } from '@/components/search/search';
 import { Filters } from '@/components/filters/filters';
-import { useMainStyles } from '@/app/styles';
 import { AuthorizeData } from '@/utils/constants';
 import { VacancyCard } from '@/components/vacancyCard/vacancyCard';
 import { PaginationWrapper } from '@/components/pagination/Pagination';
@@ -11,17 +10,16 @@ import { useAppDispatch, useAppSelector } from '@/utils/hooks/redux';
 import { setRefreshToken, setToken } from '@/store/reducers/tokenReducer';
 import { useEffect } from 'react';
 import { setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
-import { LoaderWrapper } from '@/components/loader/loader';
-import { setLoadingFalse, setLoadingTrue } from '@/store/reducers/loadingReducer';
+import { useLoading } from '@/utils/hooks/useLoading';
+import { EmptyPage } from '@/components/emptyPage/emptyPage';
+import { useVacanciesStyles } from '@/app/vacancies/styles';
 
-export default function Page() {
-  const { classes } = useMainStyles();
+export default function Vacancies() {
+  const { classes } = useVacanciesStyles();
 
   const { token } = useAppSelector((state) => state.tokenReducer);
 
   const { vacancies } = useAppSelector((state) => state.vacanciesReducer);
-
-  const { globalLoading } = useAppSelector((state) => state.loadingReducer);
 
   const dispatch = useAppDispatch();
 
@@ -30,11 +28,12 @@ export default function Page() {
 
   const [
     vacanciesTrigger,
-    { data: VacancyResponse, isError: isVacanciesError, isLoading, isSuccess },
+    { data: VacancyResponse, isError: isVacanciesError, isLoading, isSuccess, isFetching },
   ] = superJobApi.useLazyGetVacanciesQuery();
 
+  useLoading(isLoading, isSuccess, isVacanciesError, isFetching);
+
   useEffect(() => {
-    if (isLoading) setLoadingTrue();
     if (!token && !isAuthError) {
       authTrigger(AuthorizeData);
       dispatch(setToken(authResponse?.access_token));
@@ -45,20 +44,24 @@ export default function Page() {
       dispatch(setVacancies(VacancyResponse?.objects));
       dispatch(setPages(VacancyResponse?.total ? Math.ceil(VacancyResponse?.total / 4) : 1));
     }
-    if (isSuccess) setLoadingFalse();
   });
 
   return (
     <>
-      <Filters />
-      <Container className={classes.vacanciesSearch}>
-        <Search />
-        <Container className={classes.vacanciesList}>
-          {vacancies && vacancies.map((el) => <VacancyCard key={el.id} vacancy={el} />)}
-          <PaginationWrapper />
+      {isVacanciesError || VacancyResponse?.objects.length === 0 ? (
+        <EmptyPage />
+      ) : (
+        <Container className={classes.vacanciesWrapper}>
+          <Filters />
+          <Container className={classes.vacanciesSearch}>
+            <Search />
+            <Container className={classes.vacanciesList}>
+              {vacancies && vacancies.map((el) => <VacancyCard key={el.id} vacancy={el} />)}
+              <PaginationWrapper />
+            </Container>
+          </Container>
         </Container>
-      </Container>
-      <LoaderWrapper opened={globalLoading} />
+      )}
     </>
   );
 }

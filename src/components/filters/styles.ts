@@ -1,19 +1,23 @@
-import { createStyles, px, rem } from '@mantine/core';
+import { createStyles, em, getBreakpointValue, rem } from '@mantine/core';
 
 export const useFiltersStyles = createStyles((theme, { opened }: { opened: boolean }) => ({
   filtersWrapper: {
-    width: px(315),
-    height: px(360),
-    padding: px(20),
+    width: 315,
+    height: 360,
+    padding: 20,
     backgroundColor: theme.colors.gray[0],
     border: `${rem(1)} solid ${theme.colors.gray[2]}`,
-    borderRadius: px(12),
+    borderRadius: 12,
+    [`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.md) - 1)})`]: {
+      width: '100%',
+      height: 'unset',
+    },
   },
 
   filtersForm: {},
 
   filtersTitle: {
-    fontSize: px(20),
+    fontSize: 20,
   },
 
   resetFiltersWrapper: {
@@ -21,34 +25,34 @@ export const useFiltersStyles = createStyles((theme, { opened }: { opened: boole
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    height: px(20),
+    height: 20,
     padding: 0,
-    marginBottom: px(32),
+    marginBottom: 32,
   },
 
   filtersSubTitle: {
-    marginTop: px(20),
-    fontSize: px(16),
+    marginTop: 20,
+    fontSize: 16,
   },
 
   resetFiltersBtn: {
-    width: px(115),
+    width: 115,
     display: 'flex',
     justifyContent: 'space-between',
     fontWeight: 400,
-    fontSize: px(14),
+    fontSize: 14,
     color: theme.colors.gray[4],
     padding: 0,
   },
 
   resetFiltersBtnIcon: {
-    marginTop: px(6),
+    marginTop: 6,
   },
 
   industry: {
-    marginTop: px(8),
+    marginTop: 8,
     width: '100%',
-    height: px(42),
+    height: 42,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -74,11 +78,5 @@ export const useFiltersStyles = createStyles((theme, { opened }: { opened: boole
     color: theme.colors.gray[4],
     transition: 'transform 150ms ease',
     transform: opened ? 'rotate(180deg)' : 'rotate(0deg)',
-  },
-
-  submitBtn: {
-    marginTop: px(20),
-    backgroundColor: theme.colors.blue[4],
-    width: '100%',
   },
 }));

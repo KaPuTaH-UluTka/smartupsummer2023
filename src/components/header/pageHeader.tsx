@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Logo from '../../assets/logo.svg';
 import Image from 'next/image';
 import { HEADER_HEIGHT, headerStyles } from '@/components/header/styles';
+import { usePathname } from 'next/navigation';
 
 interface HeaderResponsiveProps {
   links: { link: string; label: string }[];
@@ -12,7 +13,8 @@ interface HeaderResponsiveProps {
 
 export function PageHeader({ links }: HeaderResponsiveProps) {
   const [opened, { toggle, close }] = useDisclosure(false);
-  const [active, setActive] = useState(links[0].link);
+  const pathname = usePathname();
+  const [active, setActive] = useState(pathname);
   const { classes, cx } = headerStyles();
 
   const items = links.map((link) => (

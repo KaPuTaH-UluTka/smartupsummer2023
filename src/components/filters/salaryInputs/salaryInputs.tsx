@@ -1,4 +1,4 @@
-import { Container, NumberInput } from '@mantine/core';
+import { Button, Container, NumberInput } from '@mantine/core';
 import { GRAY_COLORS } from '@/utils/colors';
 
 import { useInputsStyles } from '@/components/filters/salaryInputs/styles';
@@ -6,8 +6,9 @@ import { UseFormReturnType } from '@mantine/form/lib/types';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useAppDispatch } from '@/utils/hooks/redux';
 import { setPaymentFrom, setPaymentTo } from '@/store/reducers/filtersReducer';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { TestAttributes } from '@/utils/testAttributes';
+import { useVacancies } from '@/utils/hooks/useVacancies';
 
 type SalaryInputsPropsType = {
   form: UseFormReturnType<
@@ -24,6 +25,8 @@ export const SalaryInputs = (props: SalaryInputsPropsType) => {
   const { form } = props;
   const dispatch = useAppDispatch();
   const { classes } = useInputsStyles();
+
+  const { isGlobalLoading } = useVacancies();
 
   const incrementPayments = (field: string, value: string) => {
     form.setFieldValue(field, +value + 1);
@@ -63,7 +66,7 @@ export const SalaryInputs = (props: SalaryInputsPropsType) => {
   };
 
   return (
-    <>
+    <Container className={classes.inputsWrapper}>
       <NumberInput
         className={classes.salary}
         data-elem={TestAttributes.salaryFromInput}
@@ -84,6 +87,14 @@ export const SalaryInputs = (props: SalaryInputsPropsType) => {
         rightSection={rightSection('paymentTo', form.values.paymentTo)}
         min={0}
       />
-    </>
+      <Button
+        data-elem={TestAttributes.searchButton}
+        disabled={isGlobalLoading}
+        type={'submit'}
+        className={classes.submitBtn}
+      >
+        Применить
+      </Button>
+    </Container>
   );
 };
