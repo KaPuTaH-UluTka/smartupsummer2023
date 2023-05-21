@@ -7,11 +7,12 @@ import { useMainStyles } from '@/app/styles';
 import { AuthorizeData } from '@/utils/constants';
 import { VacancyCard } from '@/components/vacancyCard/vacancyCard';
 import { PaginationWrapper } from '@/components/pagination/Pagination';
-import { useAppDispatch, useAppSelector } from '@/utils/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/hooks/redux';
 import { setRefreshToken, setToken } from '@/store/reducers/tokenReducer';
 import { useEffect } from 'react';
 import { setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
 import { LoaderWrapper } from '@/components/loader/loader';
+import { setLoadingFalse, setLoadingTrue } from '@/store/reducers/loadingReducer';
 
 export default function Page() {
   const { classes } = useMainStyles();
@@ -27,10 +28,13 @@ export default function Page() {
   const [authTrigger, { data: authResponse, isError: isAuthError }] =
     superJobApi.useLazyAuthorizationQuery();
 
-  const [vacanciesTrigger, { data: vacanciesResponse, isError: isVacanciesError }] =
-    superJobApi.useLazyGetVacanciesQuery();
+  const [
+    vacanciesTrigger,
+    { data: VacancyResponse, isError: isVacanciesError, isLoading, isSuccess },
+  ] = superJobApi.useLazyGetVacanciesQuery();
 
   useEffect(() => {
+    if (isLoading) setLoadingTrue();
     if (!token && !isAuthError) {
       authTrigger(AuthorizeData);
       dispatch(setToken(authResponse?.access_token));
@@ -38,9 +42,10 @@ export default function Page() {
     }
     if (!vacancies && !isVacanciesError) {
       vacanciesTrigger();
-      dispatch(setVacancies(vacanciesResponse?.objects));
-      dispatch(setPages(vacanciesResponse?.total ? Math.ceil(vacanciesResponse?.total / 4) : 1));
+      dispatch(setVacancies(VacancyResponse?.objects));
+      dispatch(setPages(VacancyResponse?.total ? Math.ceil(VacancyResponse?.total / 4) : 1));
     }
+    if (isSuccess) setLoadingFalse();
   });
 
   return (

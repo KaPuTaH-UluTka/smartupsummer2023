@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { salaryStringBuilder } from '@/utils/salaryStringBuilder';
 import { useRouter } from 'next/navigation';
 import { TestAttributes } from '@/utils/testAttributes';
+import { favoritesChecher, favoritesUpdater } from '@/utils/helpers/favorites';
 type VacancyCardProps = {
   vacancy: {
     id: number;
@@ -26,11 +27,12 @@ export const VacancyCard = ({ vacancy }: VacancyCardProps) => {
 
   const { id, profession, town, type_of_work, payment_from, payment_to, currency } = vacancy;
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(favoritesChecher(id));
 
   const favoriteToggleHandler = (e: React.MouseEvent<SVGElement>) => {
     e.stopPropagation();
     setIsFavorite(!isFavorite);
+    favoritesUpdater(id);
   };
 
   const openVacancy = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -65,7 +67,7 @@ export const VacancyCard = ({ vacancy }: VacancyCardProps) => {
           {salaryStringBuilder(payment_from, payment_to, currency)}
         </p>
         <IconPointFilled className={classes.separatorIcon} />
-        <p className={classes.cardSchedule}>{type_of_work.title}</p>
+        <p>{type_of_work.title}</p>
       </Container>
       <Container className={classes.locationWrapper}>
         <IconMapPin className={classes.locationIcon} />

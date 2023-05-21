@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { VacanciesResponse } from '@/utils/types';
+import { VacancyResponse } from '@/utils/types';
 
 interface VacanciesState {
-  vacancies: VacanciesResponse[] | null;
+  vacancies: VacancyResponse[] | null;
   totalPages: number | null;
 }
 

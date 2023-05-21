@@ -7,7 +7,6 @@ import { useMainStyles } from '@/app/styles';
 import { BLUE_COLORS, GRAY_COLORS } from '@/utils/colors';
 import { store } from '@/store/store';
 import { Provider } from 'react-redux';
-import { LoaderWrapper } from '@/components/loader/loader';
 
 const inter = Inter({ subsets: ['latin'] });
 

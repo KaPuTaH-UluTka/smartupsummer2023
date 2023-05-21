@@ -5,7 +5,7 @@ import {
   AuthorizationResponse,
   CataloguesResponse,
   VacanciesRequest,
-  VacanciesResponse,
+  VacancyResponse,
 } from '@/utils/types';
 import { API_SECRET, AuthorizeData } from '@/utils/constants';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
@@ -39,7 +39,7 @@ export const superJobApi = createApi({
       }),
     }),
     getVacancies: builder.query<
-      { objects: VacanciesResponse[]; total: number },
+      { objects: VacancyResponse[]; total: number },
       VacanciesRequest | void
     >({
       query: (data, itemsPerPage = 4) => ({
@@ -48,8 +48,18 @@ export const superJobApi = createApi({
         }${data?.paymentFrom ? `&payment_from=${data?.paymentFrom}` : ''}${
           data?.paymentTo ? `&payment_to=${data?.paymentTo}` : ''
         }${data?.catalogue ? `&catalogues=${data?.catalogue}` : ''}&page=${
-          data?.page || 1
-        }&count=${itemsPerPage}`,
+          data?.page || 0
+        }&count=${itemsPerPage}&no_agreement=${data?.paymentFrom || data?.paymentTo ? '1' : '0'}`,
+        headers: {
+          'x-secret-key': API_SECRET,
+          'X-Api-App-Id': AuthorizeData.client_secret,
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getOneVacancy: builder.query<VacancyResponse, string>({
+      query: (id) => ({
+        url: API_ENDPOINTS.VACANCIES + id,
         headers: {
           'x-secret-key': API_SECRET,
           'X-Api-App-Id': AuthorizeData.client_secret,

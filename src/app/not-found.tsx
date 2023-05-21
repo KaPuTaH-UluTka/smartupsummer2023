@@ -1,13 +1,13 @@
 'use client';
-import { useRouter } from 'next/navigation';
+
+import Link from 'next/link';
 
 export default function NotFound() {
-  const router = useRouter();
   return (
     <div>
       <h1>Not found – 404!</h1>
       <div>
-        <button onClick={() => router.push('/')}>Go back to Home</button>
+        <Link href="/">Go back to Home</Link>
       </div>
     </div>
   );

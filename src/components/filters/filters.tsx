@@ -4,7 +4,7 @@ import { UnstyledButton, Menu, Group, Container, Title, Button, ScrollArea } fro
 import { IconChevronDown, IconPlus } from '@tabler/icons-react';
 import { useFiltersStyles } from '@/components/filters/styles';
 import { SalaryInputs } from '@/components/filters/salaryInputs/salaryInputs';
-import { useAppDispatch, useAppSelector } from '@/utils/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/hooks/redux';
 import { superJobApi } from '@/store/api/api';
 import { setCatalogues } from '@/store/reducers/cataloguesReducer';
 import { setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
@@ -17,45 +17,24 @@ import {
 } from '@/store/reducers/filtersReducer';
 import { TestAttributes } from '@/utils/testAttributes';
 import { setLoadingFalse, setLoadingTrue } from '@/store/reducers/loadingReducer';
+import { useVacancies } from '@/utils/hooks/useVacancies';
 
 export function Filters() {
   const dispatch = useAppDispatch();
-
+  const [opened, setOpened] = useState(false);
+  const { classes } = useFiltersStyles({ opened });
   const { catalogues } = useAppSelector((state) => state.cataloguesReducer);
-  const { currentCatalog, paymentFrom, paymentTo, keyword } = useAppSelector(
-    (state) => state.filtersReducer
-  );
-  const { globalLoading } = useAppSelector((state) => state.loadingReducer);
+
   const [cataloguesTrigger, { data: cataloguesResponse }] = superJobApi.useLazyGetCataloguesQuery();
 
-  const [vacanciesTrigger, { data: vacanciesResponse, isLoading, isSuccess, isFetching }] =
-    superJobApi.useLazyGetVacanciesQuery();
+  const { globalLoading, submitHandler } = useVacancies();
 
   useEffect(() => {
-    if (isLoading) {
-      dispatch(setLoadingTrue());
-    }
-
     if (!catalogues) {
       cataloguesTrigger();
       dispatch(setCatalogues(cataloguesResponse));
     }
-
-    if (!isFetching && isSuccess) {
-      dispatch(setVacancies(vacanciesResponse?.objects));
-      dispatch(setPages(vacanciesResponse?.total));
-      dispatch(setLoadingFalse());
-    }
-  }, [
-    catalogues,
-    cataloguesResponse,
-    cataloguesTrigger,
-    dispatch,
-    isFetching,
-    isSuccess,
-    vacanciesResponse?.objects,
-    vacanciesResponse?.total,
-  ]);
+  }, [catalogues, cataloguesResponse, cataloguesTrigger, dispatch]);
 
   const form = useForm({
     initialValues: {
@@ -65,21 +44,9 @@ export function Filters() {
     },
   });
 
-  const [opened, setOpened] = useState(false);
-  const { classes } = useFiltersStyles({ opened });
-
   const currentCatalogSetter = (catalogue: CataloguesResponse) => {
     form.setFieldValue('catalogue', catalogue.title_rus);
     dispatch(setCurrentCatalog(catalogue));
-  };
-
-  const submitHandler = () => {
-    vacanciesTrigger({
-      catalogue: currentCatalog?.key,
-      paymentFrom: paymentFrom,
-      paymentTo: paymentTo,
-      keyword: keyword,
-    });
   };
 
   const changeHandler = () => {

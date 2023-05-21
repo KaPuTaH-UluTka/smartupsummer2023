@@ -8,13 +8,15 @@ export const useMainStyles = createStyles((theme) => ({
     paddingTop: '40px',
     background: theme.colors.gray[1],
   },
-  main: { display: 'flex', flexDirection: 'row', columnGap: px(20) },
+  main: { display: 'flex', flexDirection: 'row', paddingBottom: 50 },
 
   vacanciesSearch: {
     maxWidth: px(773),
     width: '100%',
     display: 'flex',
+    padding: 0,
     flexDirection: 'column',
+    marginLeft: px(28),
   },
 
   vacanciesList: {

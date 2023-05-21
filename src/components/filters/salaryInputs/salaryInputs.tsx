@@ -4,7 +4,7 @@ import { GRAY_COLORS } from '@/utils/colors';
 import { useInputsStyles } from '@/components/filters/salaryInputs/styles';
 import { UseFormReturnType } from '@mantine/form/lib/types';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
-import { useAppDispatch } from '@/utils/hooks';
+import { useAppDispatch } from '@/utils/hooks/redux';
 import { setPaymentFrom, setPaymentTo } from '@/store/reducers/filtersReducer';
 import React, { useEffect } from 'react';
 import { TestAttributes } from '@/utils/testAttributes';

@@ -32,7 +32,7 @@ export interface CataloguesResponse {
   url_rus: string;
 }
 
-export interface VacanciesResponse {
+export interface VacancyResponse {
   id: number;
   profession: string;
   firm_name: string;
@@ -45,4 +45,5 @@ export interface VacanciesResponse {
   payment_from: number;
   payment_to: number;
   currency: string;
+  vacancyRichText: string;
 }
