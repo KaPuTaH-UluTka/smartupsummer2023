@@ -4,7 +4,7 @@ import { AuthorizeData } from '@/utils/constants';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/redux';
 import { setRefreshToken, setToken } from '@/store/reducers/tokenReducer';
 import { useEffect } from 'react';
-import Vacancies from '@/pages/vacancies/vacancies';
+import Vacancies from '@/page-components/vacancies/vacancies';
 
 export default function VacanciesWrapper() {
   const { token } = useAppSelector((state) => state.tokenReducer);

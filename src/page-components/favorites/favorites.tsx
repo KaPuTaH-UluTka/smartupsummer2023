@@ -8,7 +8,7 @@ import { EmptyPage } from '@/components/emptyPage/emptyPage';
 import { Container } from '@mantine/core';
 import { VacancyCard } from '@/components/vacancyCard/vacancyCard';
 import { PaginationWrapper } from '@/components/pagination/Pagination';
-import { useFavoritesStyles } from '@/pages/favorites/styles';
+import { useFavoritesStyles } from '@/page-components/favorites/styles';
 
 const Favorites = () => {
   const dispatch = useAppDispatch();

@@ -1,11 +1,11 @@
 import React from 'react';
 import { superJobApi } from '@/store/api/api';
-import { useVacancyStyles } from '@/pages/vacancy/styles';
 import { useLoading } from '@/utils/hooks/useLoading';
 import { Container } from '@mantine/core';
 import { EmptyPage } from '@/components/emptyPage/emptyPage';
 import { VacancyCard } from '@/components/vacancyCard/vacancyCard';
 import './styles.css';
+import { useVacancyStyles } from '@/page-components/vacancy/styles';
 
 const Vacancy = ({ id }: { id: string }) => {
   const { data, isLoading, isError, isSuccess, isFetching } = superJobApi.useGetOneVacancyQuery(id);

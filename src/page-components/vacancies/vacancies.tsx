@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useVacanciesStyles } from '@/pages/vacancies/styles';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/redux';
 import { superJobApi } from '@/store/api/api';
 import { useLoading } from '@/utils/hooks/useLoading';
@@ -10,6 +9,7 @@ import { Search } from '@/components/search/search';
 import { VacancyCard } from '@/components/vacancyCard/vacancyCard';
 import { PaginationWrapper } from '@/components/pagination/Pagination';
 import { EmptyPage } from '@/components/emptyPage/emptyPage';
+import { useVacanciesStyles } from '@/page-components/vacancies/styles';
 
 const Vacancies = () => {
   const { classes } = useVacanciesStyles();

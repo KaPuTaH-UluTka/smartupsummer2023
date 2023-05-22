@@ -1,5 +1,5 @@
 'use client';
-import Favorites from '@/pages/favorites/favorites';
+import Favorites from '@/page-components/favorites/favorites';
 
 export default function FavoritesWrapper() {
   return <Favorites />;
