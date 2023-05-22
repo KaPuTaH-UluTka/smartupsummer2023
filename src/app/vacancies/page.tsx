@@ -27,15 +27,7 @@ export default function Vacancies() {
 
   const [
     vacanciesTrigger,
-    {
-      data: VacancyResponse,
-      isError: isVacanciesError,
-      isLoading,
-      isSuccess,
-      isFetching,
-      isError,
-      error,
-    },
+    { data: VacancyResponse, isError: isVacanciesError, isLoading, isSuccess, isFetching, error },
   ] = superJobApi.useLazyGetVacanciesQuery();
 
   useLoading(isLoading, isSuccess, isVacanciesError, isFetching);
@@ -50,6 +42,9 @@ export default function Vacancies() {
       vacanciesTrigger();
       dispatch(setVacancies(VacancyResponse?.objects));
       dispatch(setPages(VacancyResponse?.total ? Math.ceil(VacancyResponse?.total / 4) : 1));
+    }
+    if (isVacanciesError) {
+      vacanciesTrigger();
     }
   }, [
     VacancyResponse?.objects,
@@ -81,7 +76,7 @@ export default function Vacancies() {
               <PaginationWrapper />
             </Container>
           ) : (
-            (isError || VacancyResponse?.objects.length === 0) && (
+            (isVacanciesError || VacancyResponse?.objects.length === 0) && (
               <EmptyPage isFromVacancies={true} />
             )
           )}

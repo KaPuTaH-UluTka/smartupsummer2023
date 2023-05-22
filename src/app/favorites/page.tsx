@@ -26,7 +26,7 @@ export default function Favorites() {
   useLoading(isLoading, isSuccess, isError, isFetching);
 
   useEffect(() => {
-    if (!favoriteVacancies && !isError && !isLoading) {
+    if (!favoriteVacancies && !isError && !isLoading && parsedFavorites) {
       trigger(parsedFavorites.splice(0, 4));
       dispatch(setFavoriteVacancies(data?.objects));
     }
@@ -34,7 +34,7 @@ export default function Favorites() {
 
   return (
     <>
-      {isError || data?.objects.length === 0 ? (
+      {isError || parsedFavorites.length === 0 ? (
         <EmptyPage />
       ) : (
         <Container className={classes.favoritesWrapper}>
