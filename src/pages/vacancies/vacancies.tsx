@@ -14,7 +14,7 @@ import { EmptyPage } from '@/components/emptyPage/emptyPage';
 const Vacancies = () => {
   const { classes } = useVacanciesStyles();
 
-  const { token, refreshToken } = useAppSelector((state) => state.tokenReducer);
+  const { token } = useAppSelector((state) => state.tokenReducer);
   const { vacancies } = useAppSelector((state) => state.vacanciesReducer);
 
   const dispatch = useAppDispatch();

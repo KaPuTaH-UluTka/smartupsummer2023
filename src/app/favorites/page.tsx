@@ -1,3 +1,4 @@
+'use client';
 import Favorites from '@/pages/favorites/favorites';
 
 export default function FavoritesWrapper() {
