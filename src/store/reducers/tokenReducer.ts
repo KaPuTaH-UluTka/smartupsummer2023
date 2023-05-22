@@ -18,9 +18,9 @@ export const TokenReducer = createSlice({
       state.token = token.payload;
       localStorage.setItem('token', token.payload);
     },
-    setRefreshToken: (state, token) => {
-      state.token = token.payload;
-      localStorage.setItem('refresh', token.payload);
+    setRefreshToken: (state, refreshToken) => {
+      state.refreshToken = refreshToken.payload;
+      localStorage.setItem('refresh', refreshToken.payload);
     },
   },
 });
