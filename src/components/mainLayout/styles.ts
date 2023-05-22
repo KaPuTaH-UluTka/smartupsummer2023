@@ -1,6 +1,6 @@
 import { createStyles } from '@mantine/core';
 
-export const useMainStyles = createStyles((theme) => ({
+export const useMainLayoutStyles = createStyles((theme) => ({
   mainBg: {
     minWidth: '100vw',
     minHeight: 'calc(100vh - 86px)',

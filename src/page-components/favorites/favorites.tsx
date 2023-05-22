@@ -26,24 +26,25 @@ const Favorites = () => {
   useEffect(() => {
     if (!favoriteVacancies && !isError && !isLoading && parsedFavorites) {
       trigger(parsedFavorites.splice(0, 4));
+    }
+    if (isSuccess && data) {
       dispatch(setFavoriteVacancies(data?.objects));
     }
   });
+
   return (
     <>
-      {isError || parsedFavorites.length === 0 ? (
-        <EmptyPage />
-      ) : (
+      {favoriteVacancies && (
         <Container className={classes.favoritesWrapper}>
           <Container className={classes.favoritesList}>
-            {favoriteVacancies &&
-              favoriteVacancies.map((el) => <VacancyCard key={el.id} vacancy={el} />)}
+            {favoriteVacancies.map((el) => (
+              <VacancyCard key={el.id} vacancy={el} />
+            ))}
           </Container>
-          {favoriteVacancies && (
-            <PaginationWrapper isFavorites={true} favoritesPages={favoritePages} />
-          )}
+          <PaginationWrapper isFavorites={true} favoritesPages={favoritePages} />
         </Container>
       )}
+      {(isError || parsedFavorites.length === 0) && <EmptyPage />}
     </>
   );
 };

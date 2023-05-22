@@ -2,8 +2,7 @@
 import { Inter } from 'next/font/google';
 import { PageHeader } from '@/components/header/pageHeader';
 import { HEADER_LINKS } from '@/utils/headerLinks';
-import { Container, MantineProvider } from '@mantine/core';
-import { useMainStyles } from '@/app/styles';
+import { MantineProvider } from '@mantine/core';
 import { BLUE_COLORS, GRAY_COLORS } from '@/utils/colors';
 import { store } from '@/store/store';
 import { Provider } from 'react-redux';
@@ -12,8 +11,6 @@ import { MainLayout } from '@/components/mainLayout/mainLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const { classes } = useMainStyles();
-
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -57,11 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }}
           >
             <PageHeader links={HEADER_LINKS} />
-            <Container className={classes.mainBg}>
-              <Container className={classes.main} size={'lg'}>
-                <MainLayout>{children}</MainLayout>
-              </Container>
-            </Container>
+            <MainLayout>{children}</MainLayout>
           </MantineProvider>
         </Provider>
       </body>

@@ -42,7 +42,11 @@ export const useVacancyCardStyles = createStyles((theme) => ({
     marginRight: px(12),
     color: theme.colors.gray[5],
   },
+  typeOfWork: {
+    fontSize: 16,
+    fontWeight: 400,
+  },
   locationWrapper: { display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 0 },
   locationIcon: { width: px(20), color: theme.colors.gray[4] },
-  location: { marginLeft: px(8) },
+  location: { marginLeft: px(8), fontSize: 16, fontWeight: 400 },
 }));

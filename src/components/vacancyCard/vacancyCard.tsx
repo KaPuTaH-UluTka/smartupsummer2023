@@ -64,15 +64,15 @@ export const VacancyCard = ({ vacancy, isVacancyPage }: VacancyCardProps) => {
         )}
       </Container>
       <Container className={classes.cardSalaryWrapper}>
-        <p className={classes.cardSalary}>
+        <Title className={classes.cardSalary}>
           {salaryStringBuilder(payment_from, payment_to, currency)}
-        </p>
+        </Title>
         <IconPointFilled className={classes.separatorIcon} />
-        <p>{type_of_work.title}</p>
+        <Title className={classes.typeOfWork}>{type_of_work.title}</Title>
       </Container>
       <Container className={classes.locationWrapper}>
         <IconMapPin className={classes.locationIcon} />
-        <p className={classes.location}>{town.title}</p>
+        <Title className={classes.location}>{town.title}</Title>
       </Container>
     </Container>
   );
