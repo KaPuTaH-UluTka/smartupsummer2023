@@ -9,33 +9,32 @@ import {
 } from '@/utils/types';
 import { API_SECRET, AuthorizeData } from '@/utils/constants';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-const token = localStorage.getItem('token');
+import { RootState } from '@/store/store';
 
 export const superJobApi = createApi({
   reducerPath: 'superJobApi',
   keepUnusedDataFor: 0,
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const { token } = (getState() as RootState).tokenReducer;
+      headers.set('x-secret-key', API_SECRET);
+      headers.set('X-Api-App-Id', AuthorizeData.client_secret);
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     authorization: builder.query<AuthorizationResponse, AuthorizationRequest>({
       query: (data) => ({
         url: `${API_ENDPOINTS.AUTHORIZATION}?login=${data.login}&password=${data.password}&client_id=${data.client_id}&client_secret=${data.client_secret}&hr=${data.hr}`,
-        headers: {
-          'x-secret-key': API_SECRET,
-          'X-Api-App-Id': AuthorizeData.client_secret,
-        },
       }),
     }),
     getCatalogues: builder.query<CataloguesResponse[], void>({
       query: () => ({
         url: API_ENDPOINTS.CATALOGUES,
-        headers: {
-          'x-secret-key': API_SECRET,
-          'X-Api-App-Id': AuthorizeData.client_secret,
-          Authorization: `Bearer ${token}`,
-        },
       }),
     }),
     getVacancies: builder.query<
@@ -50,21 +49,11 @@ export const superJobApi = createApi({
         }${data?.catalogue ? `&catalogues=${data?.catalogue}` : ''}&page=${
           data?.page || 0
         }&count=${itemsPerPage}&no_agreement=${data?.paymentFrom || data?.paymentTo ? '1' : '0'}`,
-        headers: {
-          'x-secret-key': API_SECRET,
-          'X-Api-App-Id': AuthorizeData.client_secret,
-          Authorization: `Bearer ${token}`,
-        },
       }),
     }),
     getOneVacancy: builder.query<VacancyResponse, string>({
       query: (id) => ({
         url: API_ENDPOINTS.VACANCIES + id,
-        headers: {
-          'x-secret-key': API_SECRET,
-          'X-Api-App-Id': AuthorizeData.client_secret,
-          Authorization: `Bearer ${token}`,
-        },
       }),
     }),
     getFavoriteVacancies: builder.query<{ objects: VacancyResponse[]; total: number }, number[]>({
@@ -73,11 +62,14 @@ export const superJobApi = createApi({
           API_ENDPOINTS.VACANCIES +
           '?published=1' +
           data.map((el, i) => `&ids[${i}]=${el}`).join(''),
-        headers: {
-          'x-secret-key': API_SECRET,
-          'X-Api-App-Id': AuthorizeData.client_secret,
-          Authorization: `Bearer ${token}`,
-        },
+      }),
+    }),
+    refreshToken: builder.query<
+      AuthorizationResponse,
+      { user: AuthorizationRequest; refresh: string }
+    >({
+      query: (data) => ({
+        url: `${API_ENDPOINTS.REFRESH_TOKEN}?refresh_token=${data.refresh}&client_id=${data.user.client_id}&client_secret=${data.user.client_secret} `,
       }),
     }),
   }),

@@ -1,4 +1,4 @@
-import { createStyles, em, getBreakpointValue, px } from '@mantine/core';
+import { createStyles, em, getBreakpointValue } from '@mantine/core';
 
 export const useVacanciesStyles = createStyles((theme) => ({
   vacanciesWrapper: {

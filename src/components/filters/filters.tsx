@@ -7,7 +7,6 @@ import { SalaryInputs } from '@/components/filters/salaryInputs/salaryInputs';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/redux';
 import { superJobApi } from '@/store/api/api';
 import { setCatalogues } from '@/store/reducers/cataloguesReducer';
-import { setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
 import { CataloguesResponse } from '@/utils/types';
 import {
   resetFilters,
@@ -23,17 +22,17 @@ export function Filters() {
   const [opened, setOpened] = useState(false);
   const { classes } = useFiltersStyles({ opened });
   const { catalogues } = useAppSelector((state) => state.cataloguesReducer);
-
+  const { token } = useAppSelector((state) => state.tokenReducer);
   const [cataloguesTrigger, { data: cataloguesResponse }] = superJobApi.useLazyGetCataloguesQuery();
 
   const { submitHandler } = useVacancies();
 
   useEffect(() => {
-    if (!catalogues) {
+    if (!catalogues && token) {
       cataloguesTrigger();
       dispatch(setCatalogues(cataloguesResponse));
     }
-  }, [catalogues, cataloguesResponse, cataloguesTrigger, dispatch]);
+  }, [catalogues, cataloguesResponse, cataloguesTrigger, dispatch, token]);
 
   const form = useForm({
     initialValues: {

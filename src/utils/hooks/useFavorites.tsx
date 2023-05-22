@@ -1,14 +1,18 @@
 import { superJobApi } from '@/store/api/api';
 import { useLoading } from '@/utils/hooks/useLoading';
-import { setFavoriteVacancies, setPages, setVacancies } from '@/store/reducers/vacanciesReducer';
+import { setFavoriteVacancies } from '@/store/reducers/vacanciesReducer';
 import { useAppDispatch } from '@/utils/hooks/redux';
 import { useEffect } from 'react';
 
 export const useFavorites = () => {
   const dispatch = useAppDispatch();
-  const favorites = localStorage.getItem('favorites');
+  let favorites;
 
-  const parsedFavorites = favorites && JSON.parse(favorites);
+  if (typeof window !== 'undefined') {
+    favorites = localStorage.getItem('favorites');
+  }
+
+  const parsedFavorites = favorites ? JSON.parse(favorites) : '';
 
   const [trigger, { data, isLoading, isSuccess, isError, isFetching }] =
     superJobApi.useLazyGetFavoriteVacanciesQuery();

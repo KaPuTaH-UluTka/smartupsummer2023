@@ -2,7 +2,7 @@
 import React from 'react';
 import { Container } from '@mantine/core';
 import { VacancyCard } from '@/components/vacancyCard/vacancyCard';
-import { notFound, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { superJobApi } from '@/store/api/api';
 import { useVacancyStyles } from '@/app/vacancies/[id]/styles';
 

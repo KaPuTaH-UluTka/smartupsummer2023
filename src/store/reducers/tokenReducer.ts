@@ -6,8 +6,8 @@ interface TokenState {
 }
 
 const initialState: TokenState = {
-  token: localStorage.getItem('token') || null,
-  refreshToken: localStorage.getItem('refresh') || null,
+  token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
+  refreshToken: typeof window !== 'undefined' ? localStorage.getItem('refresh') : null,
 };
 
 export const TokenReducer = createSlice({

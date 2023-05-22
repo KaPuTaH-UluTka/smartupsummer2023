@@ -7,7 +7,7 @@ import EmptyLogo from '../../assets/empty.svg';
 import Image from 'next/image';
 import { useEmptyPageStyles } from '@/components/emptyPage/styles';
 
-export const EmptyPage = () => {
+export const EmptyPage = ({ isFromVacancies }: { isFromVacancies?: boolean }) => {
   const { classes } = useEmptyPageStyles();
   const router = useRouter();
   const pathname = usePathname();
@@ -15,13 +15,15 @@ export const EmptyPage = () => {
     <Container className={classes.emptyPageWrapper}>
       <Image src={EmptyLogo} alt={'empty'} />
       <Title className={classes.emptyPageTitle}>Упс, здесь еще ничего нет!</Title>
-      <Button
-        className={classes.btn}
-        variant="light"
-        onClick={() => (pathname === '/vacancies' ? router.refresh() : router.push('/vacancies'))}
-      >
-        Поиск Вакансий
-      </Button>
+      {!isFromVacancies && (
+        <Button
+          className={classes.btn}
+          variant="light"
+          onClick={() => (pathname === '/vacancies' ? router.refresh() : router.push('/vacancies'))}
+        >
+          Поиск Вакансий
+        </Button>
+      )}
     </Container>
   );
 };

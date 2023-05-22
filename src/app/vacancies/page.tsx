@@ -17,8 +17,7 @@ import { useVacanciesStyles } from '@/app/vacancies/styles';
 export default function Vacancies() {
   const { classes } = useVacanciesStyles();
 
-  const { token } = useAppSelector((state) => state.tokenReducer);
-
+  const { token, refreshToken } = useAppSelector((state) => state.tokenReducer);
   const { vacancies } = useAppSelector((state) => state.vacanciesReducer);
 
   const dispatch = useAppDispatch();
@@ -28,7 +27,15 @@ export default function Vacancies() {
 
   const [
     vacanciesTrigger,
-    { data: VacancyResponse, isError: isVacanciesError, isLoading, isSuccess, isFetching },
+    {
+      data: VacancyResponse,
+      isError: isVacanciesError,
+      isLoading,
+      isSuccess,
+      isFetching,
+      isError,
+      error,
+    },
   ] = superJobApi.useLazyGetVacanciesQuery();
 
   useLoading(isLoading, isSuccess, isVacanciesError, isFetching);
@@ -39,29 +46,47 @@ export default function Vacancies() {
       dispatch(setToken(authResponse?.access_token));
       dispatch(setRefreshToken(authResponse?.refresh_token));
     }
-    if (!vacancies && !isVacanciesError) {
+    if (!vacancies && !isVacanciesError && token) {
       vacanciesTrigger();
       dispatch(setVacancies(VacancyResponse?.objects));
       dispatch(setPages(VacancyResponse?.total ? Math.ceil(VacancyResponse?.total / 4) : 1));
     }
-  });
+  }, [
+    VacancyResponse?.objects,
+    VacancyResponse?.total,
+    authResponse?.access_token,
+    authResponse?.refresh_token,
+    authTrigger,
+    dispatch,
+    error,
+    isAuthError,
+    isVacanciesError,
+    refreshToken,
+    token,
+    vacancies,
+    vacanciesTrigger,
+  ]);
 
   return (
     <>
-      {isVacanciesError || VacancyResponse?.objects.length === 0 ? (
-        <EmptyPage />
-      ) : (
-        <Container className={classes.vacanciesWrapper}>
-          <Filters />
-          <Container className={classes.vacanciesSearch}>
-            <Search />
+      <Container className={classes.vacanciesWrapper}>
+        <Filters />
+        <Container className={classes.vacanciesSearch}>
+          <Search />
+          {vacancies ? (
             <Container className={classes.vacanciesList}>
-              {vacancies && vacancies.map((el) => <VacancyCard key={el.id} vacancy={el} />)}
+              {vacancies.map((el) => (
+                <VacancyCard key={el.id} vacancy={el} />
+              ))}
               <PaginationWrapper />
             </Container>
-          </Container>
+          ) : (
+            (isError || VacancyResponse?.objects.length === 0) && (
+              <EmptyPage isFromVacancies={true} />
+            )
+          )}
         </Container>
-      )}
+      </Container>
     </>
   );
 }
