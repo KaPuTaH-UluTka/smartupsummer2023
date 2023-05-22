@@ -13,7 +13,7 @@ import { useLoading } from '@/utils/hooks/useLoading';
 export default function Vacancy() {
   const pathname = usePathname();
 
-  const id = pathname.slice(1);
+  const id = pathname?.split('/')[2];
 
   const { data, isLoading, isError, isSuccess, isFetching } = superJobApi.useGetOneVacancyQuery(id);
 
