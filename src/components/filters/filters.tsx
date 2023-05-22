@@ -63,6 +63,7 @@ export function Filters() {
         className={classes.filtersForm}
         onSubmit={form.onSubmit(submitHandler)}
         onChange={changeHandler}
+        onBlur={changeHandler}
       >
         <Container className={classes.resetFiltersWrapper}>
           <Title className={classes.filtersTitle}>Фильтры</Title>

@@ -8,5 +8,12 @@ export const useMainLayoutStyles = createStyles((theme) => ({
     paddingTop: '40px',
     background: theme.colors.gray[1],
   },
-  main: { display: 'flex', flexDirection: 'row', paddingBottom: 50 },
+  main: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 0,
+    width: '100%',
+    paddingBottom: 50,
+    maxWidth: 1140,
+  },
 }));

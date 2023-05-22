@@ -30,21 +30,23 @@ export const SalaryInputs = (props: SalaryInputsPropsType) => {
 
   const incrementPayments = (field: string, value: string) => {
     form.setFieldValue(field, +value + 1);
-    if (field === 'paymentsFrom') {
+    if (field === 'paymentFrom') {
       dispatch(setPaymentFrom(+value + 1));
     }
-    if (field === 'paymentsTo') {
+    if (field === 'paymentTo') {
       dispatch(setPaymentTo(+value + 1));
     }
   };
 
   const decrementPayments = (field: string, value: string) => {
-    if (+value > 0) form.setFieldValue(field, +value - 1);
-    if (field === 'paymentsFrom') {
-      dispatch(setPaymentFrom(+value - 1));
-    }
-    if (field === 'paymentsTo') {
-      dispatch(setPaymentTo(+value - 1));
+    if (+value > 0) {
+      form.setFieldValue(field, +value - 1);
+      if (field === 'paymentFrom') {
+        dispatch(setPaymentFrom(+value - 1));
+      }
+      if (field === 'paymentTo') {
+        dispatch(setPaymentTo(+value - 1));
+      }
     }
   };
 
