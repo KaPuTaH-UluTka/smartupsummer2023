@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/redux';
-import { useFavoritesStyles } from '@/pages/favorites/styles';
 import { useFavorites } from '@/utils/hooks/useFavorites';
 import { superJobApi } from '@/store/api/api';
 import { useLoading } from '@/utils/hooks/useLoading';
@@ -9,6 +8,7 @@ import { EmptyPage } from '@/components/emptyPage/emptyPage';
 import { Container } from '@mantine/core';
 import { VacancyCard } from '@/components/vacancyCard/vacancyCard';
 import { PaginationWrapper } from '@/components/pagination/Pagination';
+import { useFavoritesStyles } from '@/pages/favorites/styles';
 
 const Favorites = () => {
   const dispatch = useAppDispatch();
